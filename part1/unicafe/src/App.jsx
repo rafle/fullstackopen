@@ -6,10 +6,11 @@ const Button = (props) => (
   <button onClick={props.onClick}>{props.text}</button>
 )
 
-const Stats = ({good, bad, neutral}) => {
+const Statistics = ({good, bad, neutral}) => {
   const total = good + neutral + bad ;
-  // console.log({good}, {all})
-  // const positive = good / all ;
+  if (!total) {
+    return <p>No feedback given</p>
+  }
   return (
     <div>
       <p>statistics</p>
@@ -37,7 +38,7 @@ const App = () => {
       <Button onClick={() => setNeutral(neutral + 1)} text='neutral' />
       <Button onClick={() => setBad(bad + 1)} text='bad' />
       {/* code here */}
-      <Stats good={good} bad={bad} neutral={neutral} />
+      <Statistics good={good} bad={bad} neutral={neutral} />
     </div>
   )
 }
