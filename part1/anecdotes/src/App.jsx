@@ -1,5 +1,9 @@
 import { useState } from 'react'
 
+const getRandomInteger = (min, max) => {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -11,12 +15,47 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-   
+
+  const [votes, setVotes] =  useState(Array(anecdotes.length).fill(0))
   const [selected, setSelected] = useState(0)
+
+  const setSelectedValue = (min, max) => {
+    const randomInteger = getRandomInteger(min, max)
+    setSelected(randomInteger)
+  } 
+
+  const addCurrentVote = currentIndex => {
+    const copy = [ ...votes] 
+    copy[currentIndex] += 1
+    setVotes(copy)
+  }
+
+  const DisplayAnecdote = ({voteNumber, anecdoteIndex}) => ( 
+    <>
+      <div>{anecdotes[anecdoteIndex]}</div>
+      <div>has {voteNumber} votes</div>
+    </> 
+  ) 
+
+  const BestAnecdote = () => {
+    const maxVotes = Math.max(...votes)
+    const bestAnecdoteIndex = votes.indexOf(maxVotes)
+    return (
+      <>
+        <h2>Anecdote with most votes</h2>
+        <DisplayAnecdote voteNumber={maxVotes} anecdoteIndex={bestAnecdoteIndex} />
+      </>
+    )
+  }
 
   return (
     <div>
-      {anecdotes[selected]}
+      <h2>Anecdote of the day</h2>
+      <DisplayAnecdote voteNumber={votes[selected]} anecdoteIndex={selected}/>
+      <button onClick={() => addCurrentVote(selected)}>vote</button>
+      <button onClick={() => setSelectedValue(0, anecdotes.length - 1)}>next anecdote</button>
+      <BestAnecdote />
+
     </div>
   )
 }
